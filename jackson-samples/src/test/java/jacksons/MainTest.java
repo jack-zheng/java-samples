@@ -7,14 +7,17 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,11 +98,85 @@ class MainTest {
         JsonToken t = p.nextToken();
         System.out.println(t);
         t = p.nextToken();
+        System.out.println("cur location: " + p.getCurrentLocation());
         System.out.println(t + ", " + p.getCurrentName());
         t = p.nextToken();
         System.out.println(t + ", " + t.asString());
         String msg = p.getText();
         System.out.println("my message to u is: " + msg);
 
+        // loop and print token
+        //while (p.nextToken() != null) {
+        //    System.out.println(p.getCurrentToken());
+        //    System.out.println(p.getCurrentName());
+        //    System.out.println(p.getText());
+        //    System.out.println("------");
+        //}
+    }
+
+    @Test
+    public void test_nextValue() throws IOException {
+        String json = "{\n" +
+                "    \"name\": \"Pear yPhone 72\",\n" +
+                "    \"age\": 1,\n" +
+                "    \"displayAspectRatio\": \"97:3\",\n" +
+                "    \"audioConnector\": \"none\"\n" +
+                "}";
+        // parse json
+        JsonParser p = mapper.createParser(json);
+        p.nextToken();
+        System.out.println(p.nextToken());
+        System.out.println(p.getText());
+        System.out.println(p.nextToken());
+        System.out.println(p.getText());
+    }
+
+    @Test
+    public void test_config_output() throws IOException {
+        User u = new User();
+        u.setAge(12);
+        u.setName("joe");
+
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        System.out.println(mapper.writeValueAsString(u));
+    }
+
+    @Test
+    public void test_config_empty_bean() throws IOException {
+        EmptyBean emptyBean = new EmptyBean();
+
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        System.out.println(mapper.writeValueAsString(emptyBean));
+    }
+
+    @Test
+    public void test_config_timestamp() throws IOException {
+        Date date = new Date();
+
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        System.out.println(mapper.writeValueAsString(date));
+    }
+
+    @Test
+    public void test_config_unknown_prop() throws JsonProcessingException {
+        String json = "{\n" +
+                "    \"name\": \"Pear yPhone 72\",\n" +
+                "    \"age\": 11,\n" +
+                "    \"displayAspectRatio\": \"97:3\",\n" +
+                "    \"audioConnector\": \"none\"\n" +
+                "}";
+
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        User u = mapper.readValue(json, User.class);
+        System.out.println(u);
+    }
+
+    @Test
+    public void test_config_empty_null() throws JsonProcessingException {
+        String json = "{" + "\"name\": \"\"," + "\"age\": 11" + "}";
+
+        //mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        User u = mapper.readValue(json, User.class);
+        System.out.println("name: " + u.getName());
     }
 }
