@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="e01" class="samples.entity.Employee">
+        <property name="empNo" value="1"/>
+        <property name="firstName" value="John"/>
+        <property name="lastName" value="Smith"/>
+    </bean>
+
+<!--    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"-->
+<!--          destroy-method="close"-->
+<!--          p:driverClassName="com.mysql.jdbc.Driver"-->
+<!--          p:url="jdbc:mysql://localhost:3306/mydb"-->
+<!--          p:username="root"-->
+<!--          p:password="misterkaoli"/>-->
+
+    <bean id="passenger" class="samples.entity.Passenger">
+        <constructor-arg name="name" value="John Smith"/>
+        <property name="country" ref="country"/>
+        <property name="registered" value="false"/>
+    </bean>
+    <bean id="country" class="samples.entity.Country">
+        <constructor-arg name="name" value="USA"/>
+        <constructor-arg name="codeName" value="US"/>
+    </bean>
+
+    <context:component-scan base-package="samples"/>
+</beans>
