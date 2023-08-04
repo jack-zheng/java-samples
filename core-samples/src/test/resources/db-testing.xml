@@ -22,4 +22,23 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
+    <bean id="incrementer" class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="incrementerName" value="fx_news_key"/>
+        <property name="columnName" value="value"/>
+        <property name="cacheSize"  value="5"/>
+    </bean>
+
+    <bean id="testImageDao" class="samples.con.TestImgDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="mockService" class="samples.ioc.MockServiceImpl">
+        <property name="tmpDataBean" ref="tmpDataBean"/>
+    </bean>
+
+    <bean id="tmpDataBean" class="samples.ioc.TmpDataBean"/>
+
+    <bean id="methodExecutionEventListenerV2" class="samples.event.MethodExecutionEventListenerV2"/>
+    <bean id="methodExecutionEventPublisherV2" class="samples.event.MethodExecutionEventPublisherV2"/>
 </beans>

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import samples.entity.Employee;
@@ -26,6 +27,15 @@ import java.util.Map;
 public class TestTemplateQuery {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    public void test_queryForRowSet() {
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet("select * from employees where emp_no > 100 limit 3");
+        while (rowSet.next()) {
+            System.out.println(rowSet.getDate("birth_date"));
+            System.out.println(rowSet.getString("first_name"));
+        }
+    }
 
     @Test
     public void test_execute_sql() throws SQLException {

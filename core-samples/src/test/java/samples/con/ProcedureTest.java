@@ -72,6 +72,8 @@ public class ProcedureTest {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Close the connection
         }
     }
 }
