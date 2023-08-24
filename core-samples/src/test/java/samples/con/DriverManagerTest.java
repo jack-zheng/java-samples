@@ -9,29 +9,30 @@ import java.sql.Statement;
 public class DriverManagerTest {
     public static void main(String[] args) {
         // Database connection details
-        String url = "jdbc:mysql://localhost:3306/employees";
-        String username = "root";
-        String password = "123456";
+        //String url = "jdbc:mysql://localhost:3306/employees";
+        //String username = "root";
+        //String password = "123456";
+
+        String url = "jdbc:sap://localhost:30015?reconnect=true";
+        String username = "BIZX";
+        String password = "Pass1234";
 
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
 
         try {
-            // Register the JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
-
             // Open a connection to the database
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT count(*) as CNT FROM employees");
+            resultSet = statement.executeQuery("SELECT count(*) as CNT FROM BIZX_bizxtest.user_account");
             if (resultSet.next()) {
                 int rowCount = resultSet.getInt("CNT");
 
                 System.out.println("Row count: " + rowCount);
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println("Error executing the query");
             e.printStackTrace();
         } finally {
